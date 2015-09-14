@@ -57,8 +57,8 @@ void setup()
   
   setSyncProvider(requestSync);  //set function to call when sync required
   setSyncInterval(60);
-  //setTime(1442119490);
-  setTime(requestSync()); 
+  setTime(requestSync());
+  //setTime(Teensy3Clock.get()); 
   //Teensy3Clock.set(1442119490);
 }
 
@@ -69,6 +69,7 @@ void loop()
     if (clk != 0) {
       Teensy3Clock.set(clk); // set the RTC
       setTime(clk); // set the sys clock
+      Serial.println(Teensy3Clock.get());
     }
   }
   
@@ -99,11 +100,13 @@ void loop()
     if (btnH.read() == LOW) {
       Teensy3Clock.set(now()+3600);
       setTime(Teensy3Clock.get());
+      Serial.println(Teensy3Clock.get());
     }
 
     if (btnM.read() == LOW) {
       Teensy3Clock.set(now()+60);
       setTime(Teensy3Clock.get());
+      Serial.println(Teensy3Clock.get());
     }
     
   colon = second()%2;
@@ -118,7 +121,7 @@ void showNumber(int value[], boolean colon)
   { 
     int v = value[x];
     postNumber(v, colon);
-    Serial.println(v);
+    //Serial.println(v);
   }
 
   //Latch the current segment data
@@ -190,5 +193,6 @@ unsigned long processSyncMessage() {
 time_t requestSync()
 {
   return Teensy3Clock.get();
+  Serial.println("Sync req.");
 }
 
