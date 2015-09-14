@@ -34,8 +34,8 @@ Bounce btnM = Bounce();  // to rapid touch, you can increase this time.
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Large Digit Driver");
-
+  delay(200);
+  
   pinMode(segmentClock, OUTPUT);
   pinMode(segmentData, OUTPUT);
   pinMode(segmentLatch, OUTPUT);
@@ -46,15 +46,17 @@ void setup()
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
   btnH.attach(2);
-  btnH.interval(10);
+  btnH.interval(5);
   btnM.attach(3);
-  btnM.interval(10);
+  btnM.interval(5);
   
   digitalWrite(segmentClock, LOW);
   digitalWrite(segmentData, LOW);
   digitalWrite(segmentLatch, LOW);
   digitalWrite(segmentOE, LOW);
   
+  Serial.println("Teensys RTC:");
+  Serial.println(Teensy3Clock.get());
   setSyncProvider(requestSync);  //set function to call when sync required
   setSyncInterval(60);
   setTime(requestSync());
@@ -98,13 +100,13 @@ void loop()
       Teensy3Clock.set(now());
     }*/
     if (btnH.read() == LOW) {
-      Teensy3Clock.set(now()+3600);
+      Teensy3Clock.set(now()+1800); //half because btn double-hits
       setTime(Teensy3Clock.get());
       Serial.println(Teensy3Clock.get());
     }
 
     if (btnM.read() == LOW) {
-      Teensy3Clock.set(now()+60);
+      Teensy3Clock.set(now()+30);
       setTime(Teensy3Clock.get());
       Serial.println(Teensy3Clock.get());
     }
